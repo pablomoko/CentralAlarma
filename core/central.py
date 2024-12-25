@@ -7,6 +7,27 @@ import socket
 import threading
 import json
 
+import os
+import logging
+
+# Obtener el directorio raíz (donde está el archivo `run.py` o el script principal)
+base_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+
+# Crear el directorio para los logs si no existe
+log_dir = os.path.join(base_dir, "logs")
+os.makedirs(log_dir, exist_ok=True)
+
+# Configurar el archivo de log con la ruta relativa
+logging.basicConfig(
+    level=logging.INFO,  # Nivel mínimo a registrar
+    format='%(asctime)s - %(levelname)s - %(message)s',
+    handlers=[
+        logging.StreamHandler(),  # Imprime en la consola
+        logging.FileHandler(os.path.join(log_dir, "central.log"))  # Guarda en un archivo dentro del directorio `logs`
+    ]
+)
+
+
 
 class Central():
     def __init__(self):
@@ -29,7 +50,7 @@ class Central():
     def verificar_eventos(self):
         for sensor in self.sensores:
             if sensor.estado:
-                print(f"Evento detectado por {sensor.nombre}")
+                logging.info(f"Evento detectado por {sensor.nombre}")
                 self.eventos.append(sensor)
                 for sirena in self.sirenas:
                     sirena.activar()
@@ -80,40 +101,3 @@ class Central():
         for sirena in self.sirenas:
             sirena.desactivar()
 
-
-    def iniciar_socket_server(self, host='localhost', port=65432):
-        """Inicia el servidor de sockets para comunicarse con Flask."""
-        def socket_server():
-            server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            server.bind((host, port))
-            server.listen(5)
-            print(f"Servidor de sockets escuchando en {host}:{port}")
-
-            while True:
-                conn, addr = server.accept()
-                with conn:
-                    print(f"Conexión recibida de {addr}")
-                    data = conn.recv(1024).decode()
-                    if data:
-                        respuesta = self.procesar_comando(data)
-                        conn.sendall(respuesta.encode())
-
-        # Iniciar el servidor de sockets en un hilo separado
-        self.socket_thread = threading.Thread(target=socket_server, daemon=True)
-        self.socket_thread.start()
-
-    def procesar_comando(self, comando):
-        """Procesa los comandos recibidos por el socket."""
-        try:
-            if comando == "ESTADO":
-                return json.dumps({"activa": self.activa, "eventos": [e.nombre for e in self.eventos]})
-            elif comando == "ACTIVAR":
-                self.activar_central()
-                return json.dumps({"message": "Central activada"})
-            elif comando == "DESACTIVAR":
-                self.desactivar_central()
-                return json.dumps({"message": "Central desactivada"})
-            else:
-                return json.dumps({"error": "Comando no reconocido"})
-        except Exception as e:
-            return json.dumps({"error": str(e)})

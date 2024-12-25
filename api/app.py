@@ -66,7 +66,7 @@ def iniciar_alarma():
 @app.route('/api/eventos', methods=['GET'])
 def obtener_eventos():
     if not alarma_ejecutandose():
-        return jsonify({"error": "La alarma no está ejecutándose"}), 500
+        return jsonify({"error": "La alarma no esta ejecutandose"}), 500
     return jsonify(enviar_comando_socket("ESTADO"))
 
 @app.route('/api/activar', methods=['POST'])
@@ -78,7 +78,7 @@ def activar_alarma():
 @app.route('/api/desactivar', methods=['POST'])
 def desactivar_alarma():
     if not alarma_ejecutandose():
-        return jsonify({"error": "La alarma no está ejecutándose"}), 500
+        return jsonify({"error": "La alarma no esta ejecutandose"}), 500
     return jsonify(enviar_comando_socket("DESACTIVAR"))
 
 if __name__ == "__main__":

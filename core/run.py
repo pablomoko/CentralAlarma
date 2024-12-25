@@ -1,14 +1,17 @@
-# run.py dentro de core
 from core.central import Central
-from config.settings import SENSORES, SIRENAS, BOTONES
+from core.socket_server import SocketServer
 import time
 
 
 def iniciar_central():
     central = Central()
     central.configurar_central()
-    central.iniciar_socket_server()
+
     central.activar_central()
+
+    # Crear e iniciar el servidor de sockets
+    socket_server = SocketServer(central)
+    socket_server.iniciar()
 
     try:
         while central.activa:
