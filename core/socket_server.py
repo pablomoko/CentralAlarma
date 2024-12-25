@@ -34,14 +34,26 @@ class SocketServer:
     def procesar_comando(self, comando):
         """Procesa los comandos recibidos por el socket."""
         try:
+
             if comando == "ESTADO":
-                return json.dumps({"activa": self.central.activa, "eventos": [e.nombre for e in self.central.eventos]})
+                return json.dumps({"activa": self.central.activa})
             elif comando == "ACTIVAR":
                 self.central.activar_central()
                 return json.dumps({"message": "Central activada"})
             elif comando == "DESACTIVAR":
                 self.central.desactivar_central()
                 return json.dumps({"message": "Central desactivada"})
+
+            elif comando == "SENSORES":
+                sensores_info = [{"nombre": s.nombre, "pin": s.pin, "activo": s.activo} for s in self.central.sensores]
+                return json.dumps(sensores_info)
+            elif comando == "SIRENAS":
+                sirenas_info = [{"nombre": s.nombre, "pin": s.pin} for s in self.central.sirenas]
+                return json.dumps(sirenas_info)
+            elif comando == "BOTONES":
+                botones_info = [{"nombre": b.nombre, "pin": b.pin} for b in self.central.botones]
+                return json.dumps(botones_info)
+
             else:
                 return json.dumps({"error": "Comando no reconocido"})
         except Exception as e:

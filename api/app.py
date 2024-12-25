@@ -81,5 +81,20 @@ def desactivar_alarma():
         return jsonify({"error": "La alarma no esta ejecutandose"}), 500
     return jsonify(enviar_comando_socket("DESACTIVAR"))
 
+@app.route('/api/sensores', methods=['GET'])
+def obtener_sensores():
+    return jsonify(enviar_comando_socket("SENSORES")), 200
+
+@app.route('/api/botones', methods=['GET'])
+def obtener_botones():
+    return jsonify(enviar_comando_socket("BOTONES")), 200
+
+@app.route('/api/sirenas', methods=['GET'])
+def obtener_sirenas():
+    return jsonify(enviar_comando_socket("SIRENAS")), 200
+
+
+
+
 if __name__ == "__main__":
     app.run(debug=True, host="0.0.0.0", port=5000)

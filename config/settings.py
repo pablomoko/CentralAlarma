@@ -10,6 +10,6 @@ SENSORES = [
 
 # Botón para activar la central
 BOTONES = [
-    {"nombre": "Botón Activar", "pin": 23},
-    {"nombre": "Botón Apagar", "pin": 17},
+    {"nombre": "Boton Activar", "pin": 23},
+    {"nombre": "Boton Apagar", "pin": 17},
 ]

@@ -3,10 +3,6 @@ from core.sensor import Sensor
 from core.sirena import Sirena
 from core.boton import Boton
 
-import socket
-import threading
-import json
-
 import os
 import logging
 
