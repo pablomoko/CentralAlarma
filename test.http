@@ -1,0 +1,2 @@
+POST http://192.168.100.145:5000/api/desactivar
+

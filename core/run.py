@@ -1,20 +1,13 @@
-from core.acciones import activar_central
+# run.py dentro de core
 from core.central import Central
-from core.sensor import Sensor
-from core.sirena import Sirena
-from core.boton import Boton
 from config.settings import SENSORES, SIRENAS, BOTONES
 import time
 
 
-
-if __name__ == "__main__":
-
-
+def iniciar_central():
     central = Central()
-
     central.configurar_central()
-
+    central.iniciar_socket_server()
     central.activar_central()
 
     try:
@@ -24,3 +17,7 @@ if __name__ == "__main__":
     except KeyboardInterrupt:
         print("Sistema apagado.")
         central.desactivar_central()
+
+
+if __name__ == "__main__":
+    iniciar_central()
